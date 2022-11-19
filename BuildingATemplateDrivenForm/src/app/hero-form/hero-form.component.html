@@ -34,6 +34,14 @@
   </select>
 </div>
 
+<button
+  type="button"
+  class="btn btn-default"
+  (click)="newHero(); heroForm.reset()"
+>
+  New Hero
+</button>
+
 <form #heroForm="ngForm"></form>
 <input
   type="text"
