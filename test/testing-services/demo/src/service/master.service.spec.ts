@@ -2,32 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { MasterService } from './master.service';
 import { ValueService } from './value.service';
 
-let masterService: MasterService;
-let valueServiceSpy: jasmine.SpyObj<ValueService>;
+//beforeEach()を使用しない場合、明示的にクラスを作成する
+function setup() {
+    const valueServiceSpy =  jasmine.createSpyObj('ValueService',['getValue']);
+    const stubValue = 'stub value';
+    const masterService = new MasterService(valueServiceSpy);
 
-describe('MasterService', () => {
-  beforeEach(()=>
-  {
-    const spy = jasmine.createSpyObj('ValueService',['getValue']);
-
-    TestBed.configureTestingModule({
-      //テスト用サービスとスパイオブジェクトを両方準備する
-      providers: [
-        MasterService,
-        { provide: ValueService, useValue: spy }
-      ]
-    });
-  //サービスとスパイオブジェクトを注入する
-  masterService = TestBed.inject(MasterService);
-  valueServiceSpy = TestBed.inject(ValueService) as jasmine.SpyObj<ValueService>;});
+    valueServiceSpy.getValue.and.returnValue(stubValue);
+    return {masterService, stubValue, valueServiceSpy};
+    };
 
   it('#getValue should return stubbed value from a spy', ()=>
   {
-
-     //get value　スパイが呼ばれたときに、値をセットする
-     const stubValue = 'stub value';
-     valueServiceSpy.getValue.and.returnValue(stubValue);
-
+    //この書き方のほうが、beforeEach()スタイルよりも、多くの人にとっては明快に感じるはず
+　　const{ masterService, stubValue, valueServiceSpy} = setup();
      expect(masterService.getValue())
      .withContext('service returned stub value')
      .toBe(stubValue);
@@ -38,5 +26,3 @@ describe('MasterService', () => {
      expect(valueServiceSpy.getValue.calls.mostRecent().returnValue)
     .toBe(stubValue);
    });
-
-});
