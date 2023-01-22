@@ -3,7 +3,6 @@ import { BehaviorSubject, queueScheduler } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { State, initialState } from '../state';
 
-BehaviorSubject
 
 @Injectable({
   providedIn: 'root'
